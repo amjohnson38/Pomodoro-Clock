@@ -37,6 +37,7 @@ $(function () {
     $("#downtimeTimer").toggleClass("inactive");
     $("#workTimer").toggleClass("inactive");
     $("#clock").toggleClass("inactive");
+    $("#pause").prop("disabled", true);
 
     //changes the work time length
     $("#increaseWorkTime").on("click", function () {
@@ -66,9 +67,11 @@ $(function () {
     });
 
     $("#start").on("click", function () {
-        
+
         //disables the reset button 
         $("#reset").prop("disabled", true);
+        $("#start").prop("disabled", true);
+        $("#pause").prop("disabled", false);
         init();
     });
 
@@ -80,8 +83,9 @@ $(function () {
         $("#start").prop("disabled", false);
         //enables the reset button to work after the pause button has been pressed
         $("#reset").prop("disabled", false);
-       
-        
+        $("#pause").prop("disabled", true);
+
+
     });
     $("#reset").on("click", function () {
         //reset button needs to change the time to equal the work time value
@@ -110,7 +114,6 @@ $(function () {
  * intializes the time clock *
  *******************************************************************************/
 function init() {
-    $("#start").prop("disabled", true);
     $("#sec").html(seconds);
     if (paused === false) {
         minutes -= 1;
@@ -120,7 +123,7 @@ function init() {
     //set pause to false
     paused = false;
 
-    
+
     workTimeLength = window.setInterval(workTimeTimer, 1000);//set's the work Time 
     currentTime = workTimeLength;
 };
@@ -170,6 +173,7 @@ function downTimeTimer() {
     }
 
     if (minutes <= 0 && seconds <= 0) {
+        timerAlarm.play();
         $("#downtimeTimer").toggleClass("active inactive");
         clearInterval(breakTimeLength);
         minutes = $("#workTimeNum").html();
